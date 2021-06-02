@@ -26,16 +26,12 @@ class CommentForm extends Component {
 
     handleLogin(values) {
         this.toggleModal();
-        alert('Submitted' + JSON.stringify(values));
-
+        this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
     }
 
     render() {
         return (
-
-
             <div>  <Button type="submit" outline color="secondary" onClick={this.toggleModal}><i className="fa-lg fa fa-pencil">Submit Comment</i></Button>
-
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                     <ModalBody>
@@ -60,18 +56,18 @@ class CommentForm extends Component {
                                         minLength: minLength(2),
                                         maxLength: maxLength(15)
                                     }}
-                                 />
-<Errors
-                                        className="text-danger"
-                                        model=".author"
-                                        show="touched"
-                                        component="div"
-                                        messages={{
-                                            required: 'Required',
-                                            minLength: 'Must be at least 2 characters',
-                                            maxLength: 'Must be 15 characters or less'
-                                        }}
-                                    />
+                                />
+                                <Errors
+                                    className="text-danger"
+                                    model=".author"
+                                    show="touched"
+                                    component="div"
+                                    messages={{
+                                        required: 'Required',
+                                        minLength: 'Must be at least 2 characters',
+                                        maxLength: 'Must be 15 characters or less'
+                                    }}
+                                />
 
                             </div>
 
@@ -104,7 +100,7 @@ function RenderCampsite({ campsite }) {
     );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, campsiteId }) {
     if (comments) {
         return (
             <div className="col-md-5 m-1">
@@ -118,7 +114,7 @@ function RenderComments({ comments }) {
                     );
                 })
                 }
-                <CommentForm />
+                <CommentForm campsiteId={campsiteId} addComment={addComment} />
             </div >
 
         );
@@ -142,7 +138,11 @@ function CampsiteInfo(props) {
                 </div>
                 <div className="row">
                     <RenderCampsite campsite={props.campsite} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments
+                        comments={props.comments}
+                        addComment={props.addComment}
+                        campsiteId={props.campsite.id}
+                    />
                 </div>
             </div>
         );
