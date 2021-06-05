@@ -82,7 +82,6 @@ class CommentForm extends Component {
                             </div>
                             <Button type="submit" outline color="primary"> Submit</Button>
                         </LocalForm>
-
                     </ModalBody>
                 </Modal >
             </div>
@@ -93,23 +92,23 @@ class CommentForm extends Component {
 function RenderCampsite({ campsite }) {
     return (
         <div className="col-md-5 m-1">
-        <FadeTransform
-            in
-            transformProps={{
-                exitTransform: 'scale(0.5) translateY(-50%)'
-            }}>
-            <Card>
-                <CardImg top src={baseUrl + campsite.image} alt={campsite.name} />
-                <CardBody>
-                    <CardText>{campsite.description}</CardText>
-                </CardBody>
-            </Card>
-        </FadeTransform>
-    </div>
+            <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
+                <Card>
+                    <CardImg top src={baseUrl + campsite.image} alt={campsite.name} />
+                    <CardBody>
+                        <CardText>{campsite.description}</CardText>
+                    </CardBody>
+                </Card>
+            </FadeTransform>
+        </div>
     );
 }
 
-function RenderComments({comments, postComment, campsiteId}) {
+function RenderComments({ comments, postComment, campsiteId }) {
     if (comments) {
         return (
             <div className="col-md-5 m-1">
@@ -122,7 +121,7 @@ function RenderComments({comments, postComment, campsiteId}) {
                                     <div>
                                         <p>
                                             {comment.text}<br />
-                                            -- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}
+                                            -- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}
                                         </p>
                                     </div>
                                 </Fade>
@@ -130,7 +129,7 @@ function RenderComments({comments, postComment, campsiteId}) {
                         })
                     }
                 </Stagger>
-               <CommentForm campsiteId={campsiteId} postComment={postComment} />
+                <CommentForm campsiteId={campsiteId} postComment={postComment} />
             </div >
 
         );
@@ -178,7 +177,7 @@ function CampsiteInfo(props) {
                         comments={props.comments}
                         postComment={props.postComment}
                         campsiteId={props.campsite.id}
-                    />     
+                    />
                 </div>
             </div>
         );

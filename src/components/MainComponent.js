@@ -8,8 +8,8 @@ import Contact from './ContactComponent';
 import About from './AboutComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { postComment, fetchCampsites, fetchComments, fetchPromotions } from '../redux/ActionCreators';
 import { actions } from 'react-redux-form';
+import { postComment, postFeedback, fetchCampsites, fetchComments, fetchPromotions, fetchPartners } from '../redux/ActionCreators';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const mapStateToProps = state => {
@@ -23,18 +23,23 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     postComment: (campsiteId, rating, author, text) => (postComment(campsiteId, rating, author, text)),
+    postFeedback: feedback => (postFeedback(feedback)),
     fetchCampsites: () => (fetchCampsites()),
     resetFeedbackForm: () => (actions.reset('feedbackForm')),
     fetchComments: () => (fetchComments()),
-    fetchPromotions: () => (fetchPromotions())
+    fetchPromotions: () => (fetchPromotions()),
+    fetchPartners: () => (fetchPartners())
 };
+
 class Main extends Component {
 
     componentDidMount() {
         this.props.fetchCampsites();
         this.props.fetchComments();
         this.props.fetchPromotions();
+        this.props.fetchPartners();
     }
+
     render() {
 
         const HomePage = () => {
@@ -46,14 +51,16 @@ class Main extends Component {
                     promotion={this.props.promotions.promotions.filter(promotion => promotion.featured)[0]}
                     promotionLoading={this.props.promotions.isLoading}
                     promotionErrMess={this.props.promotions.errMess}
-                    partner={this.props.partners.filter(partner => partner.featured)[0]}
+                    partner={this.props.partners.partners.filter(partner => partner.featured)[0]}
+                    partnerLoading={this.props.partners.isLoading}
+                    partnerErrMess={this.props.partners.errMess}
                 />
             );
         }
 
-        const CampsiteWithId = ({ match }) => {
+        const CampsiteWithId = ({match}) => {
             return (
-                <CampsiteInfo
+                <CampsiteInfo 
                     campsite={this.props.campsites.campsites.filter(campsite => campsite.id === +match.params.campsiteId)[0]}
                     isLoading={this.props.campsites.isLoading}
                     errMess={this.props.campsites.errMess}
@@ -73,8 +80,8 @@ class Main extends Component {
                             <Route path='/home' component={HomePage} />
                             <Route exact path='/directory' render={() => <Directory campsites={this.props.campsites} />} />
                             <Route path='/directory/:campsiteId' component={CampsiteWithId} />
-                            <Route exact path='/contactus' render={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
-                            <Route exact path='/aboutus' render={() => <About partners={this.props.partners} />} />
+                            <Route exact path='/contactus' render={() => <Contact postFeedback={this.props.postFeedback} resetFeedbackForm={this.props.resetFeedbackForm} /> } />
+                            <Route exact path='/aboutus' render={() => <About partners={this.props.partners} /> } />
                             <Redirect to='/home' />
                         </Switch>
                     </CSSTransition>
@@ -86,4 +93,3 @@ class Main extends Component {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
-
